@@ -1,0 +1,10 @@
+[template]
+src   = "localConfig.js"
+dest  = "/app/statsd/localConfig.js"
+owner = "app"
+group = "app"
+mode  = "0644"
+keys = [
+]
+check_cmd = "/app/bin/check {{ .src }}"
+readload_cmd = "supervisorctl restart graphite-web"

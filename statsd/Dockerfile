@@ -24,21 +24,19 @@ RUN \
     software-properties-common
 
 RUN \
-  curl -sSL https://bootstrap.pypa.io/get-pip.py | python && \
-    pip install whisper \
-    carbon \
-    graphite-web \
-    'Twisted<12.0' \
-    'django<1.6' \
-    django-tagging
+  sudo apt-add-repository ppa:chris-lea/node.js && \
+  apt-get -yq update && \
+  apt-get -yqq install \
+    git \
+    nodejs && \
+  cd /app && \
+  git clone git://github.com/etsy/statsd.git
 
 # Expose ports.
-EXPOSE 80 2003 2004 7002
+EXPOSE 8125/udp
 
 # Define working directory.
 WORKDIR /app
-
-VOLUME /opt/graphite/storage
 
 # Define default command.
 CMD ["/app/bin/boot"]
@@ -49,6 +47,5 @@ RUN \
   mkdir -p /app/wsgi && \
   useradd -d /app -c 'application' -s '/bin/false' app && \
   chmod +x /app/bin/* && \
-  chown -R app:app /app && \
-  chown -R app:app /opt/graphite && \
-  rm -f /etc/apache2/sites-enabled/*
+  chown -R app:app /app
+

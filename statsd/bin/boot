@@ -21,24 +21,7 @@ DIR=$(dirname $0)
 # Environment variables that should be passed in via `docker run` command.
 
 # Defaults for your app:
-export APP_NAME=${APP_NAME:-"influxdb"}
-export DATABASE=${DATABASE:-'data'}
-export USER=${USER:-'data'}
-export PASS=${PASS:-'data'}
-export ROOT_PASS=${ROOT_PASS:='root'}
-export OLD_ROOT_PASS=${OLD_ROOT_PASS:='root'}
-
-# Defaults for apache
-export APACHE_RUN_USER=www-data
-export APACHE_RUN_GROUP=www-data
-export APACHE_LOG_DIR=/var/log/apache2
-export APACHE_PID_FILE=/var/run/apache2.pid
-export APACHE_RUN_DIR=/var/run/apache2
-export APACHE_LOCK_DIR=/var/lock/apache2
-export APACHE_SERVERADMIN=admin@localhost
-export APACHE_SERVERNAME=localhost
-export APACHE_SERVERALIAS=docker.localhost
-export APACHE_DOCUMENTROOT=/var/www
+export APP_NAME=${APP_NAME:-"statsd"}
 
 if [[ -n $ETCD_HOST ]]; then
   echo '==> $HOST or $ETCD_HOST set.  starting ${APP_NAME} etcd support.'
@@ -52,9 +35,7 @@ if [[ -n $ETCD_HOST ]]; then
   export SLEEP_TIME=$(($ETCD_TTL/2))
   configure_etcd
   # App specific
-  etcd_set_default databases/${DATABASE}/users/${USER} ${PASS}
-  etcd_set_default root/pass ${ROOT_PASS}
-  etcd_set_default root/old_pass ${OLD_ROOT_PASS}
+
 else
   echo '==> $HOST not set.  starting ${APP_NAME} without etcd support.'
   export CONFD_OPTIONS="-config-file /app/confd_env.toml"
@@ -67,12 +48,6 @@ until confd -onetime $CONFD_OPTIONS; do
   echo "echo ==> ${APP_NAME}: waiting for confd to write initial templates..."
   [[ -n $ETCD_HOST ]] && sleep $SLEEP_TIME  # sleep for half the TTL
 done
-
-#exit 0
-
-echo Migrating database
-chown -R app:app /opt/graphite/storage
-su -s /bin/sh -c "python /opt/graphite/webapp/graphite/manage.py syncdb --noinput" app
 
 echo Starting ${APP_NAME}
 

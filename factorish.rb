@@ -66,18 +66,18 @@ end
       '-h $HOSTNAME'
     ],
     command: "-ttl 30 -ttl-refresh 20 #{$registrator_network} etcd://$COREOS_PRIVATE_IPV4:4001/services"
-  },
-  {
-    name: 'cadvisor',
-    repository: 'google/cadvisor:latest',
-    docker_options: [
-      '--volume=/:/rootfs:ro',
-      '--volume=/var/run:/var/run:rw',
-      '--volume=/sys:/sys:ro',
-      '--volume=/var/lib/docker/:/var/lib/docker:ro',
-      '--publish=8081:8080'
-    ],
-    command: '-storage_driver=influxdb -storage_driver_host=$COREOS_PRIVATE_IPV4:8086 -storage_driver_db=grafana_metrics -storage_driver_user=grafana_metrics -storage_driver_password=grafana_metrics'
+#  },
+#  {
+#    name: 'cadvisor',
+#    repository: 'google/cadvisor:latest',
+#    docker_options: [
+#      '--volume=/:/rootfs:ro',
+#      '--volume=/var/run:/var/run:rw',
+#      '--volume=/sys:/sys:ro',
+#      '--volume=/var/lib/docker/:/var/lib/docker:ro',
+#      '--publish=8081:8080'
+#    ],
+#    command: '-storage_driver=influxdb -storage_driver_host=$COREOS_PRIVATE_IPV4:8086 -storage_driver_db=grafana_metrics -storage_driver_user=grafana_metrics -storage_driver_password=grafana_metrics'
   }
 ]
 
@@ -88,22 +88,24 @@ end
     repository: 'factorish/graphite',
     docker_options: [
       '-p 8080:80',
+      '-p 2003:2003',
+      '-p 2004:2004',
+      '-p 7002:7002',
       '-e ETCD_HOST=$COREOS_PRIVATE_IPV4'
     ],
     dockerfile: '/home/core/share/graphite',
     command: ''
-#  },
-#  {
-#    name: 'grafana',
-#    repository: 'factorish/grafana',
-#    docker_options: [   # 8083, 8086, 8090, and 8099.
-#      '-p 8080:8080',
-#      '-p 8082:8082',
-#      '-e ETCD_HOST=$COREOS_PRIVATE_IPV4',
-#      '-e HOST=$COREOS_PRIVATE_IPV4'
-#    ],
-#    dockerfile: '/home/core/share/grafana',
-#    command: ''
+  },
+  {
+    name: 'statsd',
+    repository: 'factorish/statsd',
+    docker_options: [
+      '-p 8125:8125/udp',
+      '-e ETCD_HOST=$COREOS_PRIVATE_IPV4',
+      '-e HOST=$COREOS_PRIVATE_IPV4'
+    ],
+    dockerfile: '/home/core/share/statsd',
+    command: ''
   }
 ]
 
