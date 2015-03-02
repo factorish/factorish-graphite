@@ -1,0 +1,6 @@
+backend = "etcd"
+confdir = "/app"
+interval = 5
+prefix = "/services/influxdb"
+# quiet = true
+watch = true

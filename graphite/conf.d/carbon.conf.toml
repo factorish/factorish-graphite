@@ -1,0 +1,8 @@
+[template]
+src   = "carbon.conf"
+dest  = "/opt/graphite/conf/carbon.conf"
+owner = "app"
+group = "app"
+mode  = "0644"
+
+check_cmd = "/app/bin/check {{ .src }}"

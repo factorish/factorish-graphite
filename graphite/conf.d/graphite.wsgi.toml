@@ -1,0 +1,8 @@
+[template]
+src   = "graphite.wsgi"
+dest  = "/opt/graphite/conf/graphite.wsgi"
+owner = "app"
+group = "app"
+mode  = "0644"
+
+check_cmd = "/app/bin/check {{ .src }}"

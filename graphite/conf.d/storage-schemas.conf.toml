@@ -1,0 +1,8 @@
+[template]
+src   = "storage-schemas.conf"
+dest  = "/opt/graphite/conf/storage-schemas.conf"
+owner = "app"
+group = "app"
+mode  = "0644"
+
+check_cmd = "/app/bin/check {{ .src }}"

@@ -1,0 +1,12 @@
+[template]
+src   = "manage_influx"
+dest  = "/app/bin/manage_influx"
+owner = "app"
+group = "app"
+mode  = "0755"
+keys = [
+  "/databases",
+  "/root"
+]
+check_cmd = "/app/bin/check {{ .src }}"
+reload_cmd = "/app/bin/manage_influx"

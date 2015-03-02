@@ -1,0 +1,8 @@
+[template]
+src   = "web-local_settings.py"
+dest  = "/opt/graphite/webapp/graphite/local_settings.py"
+owner = "app"
+group = "app"
+mode  = "0755"
+
+check_cmd = "/app/bin/check {{ .src }}"

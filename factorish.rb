@@ -55,13 +55,13 @@ end
       '-e GUNICORN_OPTS=[--preload]',
       '-e search_backend=',
       '-v /home/core/share/registry:/tmp/registry'
-    ],
+   ],
     command: ''
   },
   {
     name: 'registrator',
     repository: 'progrium/registrator',
-    docker_options: [
+   docker_options: [
       '-v /var/run/docker.sock:/tmp/docker.sock:ro',
       '-h $HOSTNAME'
     ],
@@ -78,36 +78,32 @@ end
       '--publish=8081:8080'
     ],
     command: '-storage_driver=influxdb -storage_driver_host=$COREOS_PRIVATE_IPV4:8086 -storage_driver_db=grafana_metrics -storage_driver_user=grafana_metrics -storage_driver_password=grafana_metrics'
-
   }
 ]
 
 # Describe your applications in this hash
 @applications = [
   {
-    name: 'influxdb',
-    repository: 'factorish/influxdb',
-    docker_options: [   # 8083, 8086, 8090, and 8099.
-      '-p 8083:8083',
-      '-p 8086:8086',
-      '-p 8090:8090',
-      '-p 8099:8099',
+    name: 'graphite',
+    repository: 'factorish/graphite',
+    docker_options: [
+      '-p 8080:80',
       '-e ETCD_HOST=$COREOS_PRIVATE_IPV4'
     ],
-    dockerfile: '/home/core/share/influxdb',
+    dockerfile: '/home/core/share/graphite',
     command: ''
-  },
-  {
-    name: 'grafana',
-    repository: 'factorish/grafana',
-    docker_options: [   # 8083, 8086, 8090, and 8099.
-      '-p 8080:8080',
-      '-p 8082:8082',
-      '-e ETCD_HOST=$COREOS_PRIVATE_IPV4',
-      '-e HOST=$COREOS_PRIVATE_IPV4'
-    ],
-    dockerfile: '/home/core/share/grafana',
-    command: ''
+#  },
+#  {
+#    name: 'grafana',
+#    repository: 'factorish/grafana',
+#    docker_options: [   # 8083, 8086, 8090, and 8099.
+#      '-p 8080:8080',
+#      '-p 8082:8082',
+#      '-e ETCD_HOST=$COREOS_PRIVATE_IPV4',
+#      '-e HOST=$COREOS_PRIVATE_IPV4'
+#    ],
+#    dockerfile: '/home/core/share/grafana',
+#    command: ''
   }
 ]
 

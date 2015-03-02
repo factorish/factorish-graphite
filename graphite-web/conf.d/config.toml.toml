@@ -1,0 +1,10 @@
+[template]
+src   = "config.toml"
+dest  = "/opt/influxdb/shared/config.toml"
+owner = "app"
+group = "app"
+mode  = "0644"
+keys = [
+]
+check_cmd = "/app/bin/check {{ .src }}"
+reload_cmd = "supervisorctl restart grafana"

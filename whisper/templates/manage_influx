@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "=> Managing Influx Database"
+
+while ! curl -k http://localhost:8086/ping 2> /dev/null; do
+  echo "=> Waiting for confirmation of InfluxDB service startup ..."
+  sleep 3
+done
+
+echo "=> Changing Password for User: root"
+curl -s -k -X POST -d "{\"password\":\"{{ getv "/root/pass" }}\"}" "http://localhost:8086/cluster_admins/root?u=root&p={{ getv "/root/old_pass" }}"
+echo ""
+
+{{ range $database := lsdir "/databases" }}
+echo "=> Creating database: {{ $database }}"
+curl -s -k -X POST -d "{\"name\":\"{{ $database }}\"}" "http://localhost:8086/db?u=root&p={{ getv "/root/pass" }}"
+
+  {{ $db_users := printf "/databases/%s/users/*" $database }}
+  {{ range gets $db_users }}
+echo "=> Creating User {{ base .Key }} for database: {{ $database }}"
+curl -s -k -X POST -d "{\"name\":\"{{ base .Key }}\",\"password\":\"{{ .Value }}\"}" "http://localhost:8086/db/{{ $database }}/users?u=root&p={{ getv "/root/pass" }}"
+  {{ end }}
+
+{{ end }}

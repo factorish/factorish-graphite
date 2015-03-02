@@ -1,0 +1,10 @@
+[template]
+src   = "apache_graphite-web.conf"
+dest  = "/etc/apache2/sites-enabled/graphite-web.conf"
+owner = "app"
+group = "app"
+mode  = "0644"
+keys = [
+]
+check_cmd = "/app/bin/check {{ .src }}"
+readload_cmd = "supervisorctl restart graphite-web"
