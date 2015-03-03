@@ -21,7 +21,7 @@ DIR=$(dirname $0)
 # Environment variables that should be passed in via `docker run` command.
 
 # Defaults for your app:
-export APP_NAME=${APP_NAME:-"influxdb"}
+export APP_NAME=${APP_NAME:-"graphite"}
 export DATABASE=${DATABASE:-'data'}
 export USER=${USER:-'data'}
 export PASS=${PASS:-'data'}
@@ -52,9 +52,7 @@ if [[ -n $ETCD_HOST ]]; then
   export SLEEP_TIME=$(($ETCD_TTL/2))
   configure_etcd
   # App specific
-  etcd_set_default databases/${DATABASE}/users/${USER} ${PASS}
-  etcd_set_default root/pass ${ROOT_PASS}
-  etcd_set_default root/old_pass ${OLD_ROOT_PASS}
+  # etcd_set_default databases/${DATABASE}/users/${USER} ${PASS}
 else
   echo '==> $HOST not set.  starting ${APP_NAME} without etcd support.'
   export CONFD_OPTIONS="-config-file /app/confd_env.toml"

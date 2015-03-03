@@ -1,4 +1,4 @@
-# This file creates a container that runs InfluxDB
+# This file creates a container that runs Graphite
 #
 # Author: Paul Czarkowski
 # Date: 02/28/2015

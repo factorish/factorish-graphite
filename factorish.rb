@@ -32,7 +32,7 @@ $expose_registry = 5000
 
 # Expose custom application ports.
 # array of ports to be exposed for your applications.
-$expose_ports = [8080, 8081]
+$expose_ports = [8080, 8125]
 
 # Mode to start in.
 # `develop` will build images from scratch
@@ -87,10 +87,10 @@ end
     name: 'graphite',
     repository: 'factorish/graphite',
     docker_options: [
-      '-p 8080:80',
-      '-p 2003:2003',
-      '-p 2004:2004',
-      '-p 7002:7002',
+      '-p 8080:80', '-e SERVICE_80_NAME=graphite_web',
+      '-p 2003:2003', '-e SERVICE_2003_NAME=graphite_line',
+      '-p 2004:2004', '-e SERVICE_2004_NAME=graphite_pickle',
+      '-p 7002:7002', '-e SERVICE_7002_NAME=graphite_cache',
       '-e ETCD_HOST=$COREOS_PRIVATE_IPV4'
     ],
     dockerfile: '/home/core/share/graphite',
@@ -100,7 +100,7 @@ end
     name: 'statsd',
     repository: 'factorish/statsd',
     docker_options: [
-      '-p 8125:8125/udp',
+      '-p 8125:8125/udp', '-e SERVICE_8125_NAME=statsd_in',
       '-e ETCD_HOST=$COREOS_PRIVATE_IPV4',
       '-e HOST=$COREOS_PRIVATE_IPV4'
     ],

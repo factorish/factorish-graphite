@@ -1,6 +1,0 @@
-backend = "env"
-confdir = "/app"
-interval = 5
-prefix = "/"
-# quiet = true
-watch = true
